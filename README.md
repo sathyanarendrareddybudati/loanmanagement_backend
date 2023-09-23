@@ -6,7 +6,6 @@ To get started with Logging, follow these steps:
 - Set up your MYSQL database and create a table for storing logs
 - Start the Djnago application using `make run` or  `python manage.py runserver`
 - To start the celery using `celery -A loanmanagement_backend worker --loglevel=info`
-- To run the command use this `python manage.py insert_csvfiles <csvfile path>`
 
 
 ## Note

@@ -1,8 +1,9 @@
 from loans.models import User
-from loans.constants import MIN_CREDIT_SCORE, MAX_CREDIT_SCORE, HIGH_BALANCE, LOW_INCOME
+from loans.constants import MIN_CREDIT_SCORE, MAX_CREDIT_SCORE, HIGH_BALANCE, LOW_INCOME, TRANSACTIONS_FILE
 from loans.models import User, Transaction
 from celery import shared_task
 from decimal import Decimal
+import csv
 
 
 @shared_task(bind=True)
@@ -21,25 +22,39 @@ def calculate_credit_score(self, annual_income, user_id):
     else:
         credit_score = min_credit_score
 
-    transactions = Transaction.objects.filter(user=user.id)
+    with open(TRANSACTIONS_FILE, 'r') as csv_file:
+        csv_reader = csv.DictReader(csv_file)
+        for row in csv_reader:
+            transaction_type = row['transaction_type']
+            amount = Decimal(row['amount'])
+
+            if transaction_type == 'CREDIT':
+                total_balance += amount
+            elif transaction_type == 'DEBIT':
+                total_balance -= amount
 
     total_balances = Decimal('0')
 
-    for transaction in transactions:
-        if transaction.transaction_type == 'CREDIT':
-            total_balances += transaction.amount
-        elif transaction.transaction_type == 'DEBIT':
-            total_balances -= transaction.amount
+    # this i have used for management command leave it you can use directly from csv file
 
-    total_balance = Decimal(total_balances)
+    # transactions = Transaction.objects.filter(user=user.id)
+    # for transaction in transactions:
+    #     if transaction.transaction_type == 'CREDIT':
+    #         total_balances += transaction.amount
+    #     elif transaction.transaction_type == 'DEBIT':
+    #         total_balances -= transaction.amount
 
-    if total_balance >= high_balance:
+    total_balances = Decimal(total_balance)
+
+    if total_balances >= high_balance:
         credit_score = max_credit_score
-    elif total_balance > low_income:
-        balance_difference = total_balance - low_income
-        credit_score -= (balance_difference // 15000) * 10
+    elif total_balances <= low_income:
+        credit_score = min_credit_score
+    else:
+        balance_difference = total_balances - low_income
+        credit_score_change = int(balance_difference / Decimal('15000')) * 10
 
-    credit_score = max(min_credit_score, min(max_credit_score, credit_score))
+        credit_score = max(min_credit_score, min(max_credit_score, max_credit_score - credit_score_change))
 
     user.credit_score = credit_score
     user.save()
