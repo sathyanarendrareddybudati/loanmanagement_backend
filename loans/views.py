@@ -49,11 +49,10 @@ class UserLoginAPI(APIView):
             password=serializer.data.get('password')
             user=authenticate(email=email,password=password)
  
-            users = user.id
             annual_income = user.annual_income
 
             #updating the credit score 
-            calculate_credit_score.delay(annual_income, users)
+            calculate_credit_score.delay(annual_income, user.id)
             
             if user is not None:
                 token, created = Token.objects.get_or_create(user=user)
