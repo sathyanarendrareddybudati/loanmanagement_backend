@@ -2,4 +2,6 @@
 
 .env
 
-.DS._Store
+/.DS._Store
+
+.vscode
