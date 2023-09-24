@@ -1,7 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .models import User, Transaction, Loan, Payment, EMI
+from .models import User, Loan, Payment, EMI
 from .serializers import UserRegistrationSerializer, UserLoginSerializer, LoanSerializer, PaymentSerializer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authtoken.models import Token
@@ -48,6 +48,7 @@ class UserLoginAPI(APIView):
             email=serializer.data.get('email')
             password=serializer.data.get('password')
             user=authenticate(email=email,password=password)
+            print('user',user.id)
  
             annual_income = user.annual_income
 

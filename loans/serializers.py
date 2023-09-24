@@ -45,8 +45,7 @@ class LoanSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Loan
-        fields = '__all__'
-
+        fields = ['loan_type','loan_amount', 'interest_rate', 'term_period', 'disbursement_date', ]
 
 class PaymentSerializer(serializers.ModelSerializer):
     class Meta:
