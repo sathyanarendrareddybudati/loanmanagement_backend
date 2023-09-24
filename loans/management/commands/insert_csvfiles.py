@@ -1,32 +1,34 @@
-import csv
-from django.core.management.base import BaseCommand
-from ...models import Transaction
+#optional 
 
-class Command(BaseCommand):
+# import csv
+# from django.core.management.base import BaseCommand
+# from ...models import Transaction
 
-    help = 'Inserting transactions from a CSV file'
+# class Command(BaseCommand):
 
-    def add_arguments(self, parser):
-        parser.add_argument('csv_file', type=str, help='/Users/satyanarendrareddybudati/Desktop/projects/loanmanagement_backend/transactions_data Backend.csv')
+#     help = 'Inserting transactions from a CSV file'
 
-    def handle(self, *args, **kwargs):
-        csv_file = kwargs['csv_file']
+#     def add_arguments(self, parser):
+#         parser.add_argument('csv_file', type=str, help='/Users/satyanarendrareddybudati/Desktop/projects/loanmanagement_backend/transactions_data Backend.csv')
+
+#     def handle(self, *args, **kwargs):
+#         csv_file = kwargs['csv_file']
         
-        try:
-            with open(csv_file, 'r') as file:
-                reader = csv.DictReader(file)
-                for row in reader:
+#         try:
+#             with open(csv_file, 'r') as file:
+#                 reader = csv.DictReader(file)
+#                 for row in reader:
                     
-                    row['user'] = 1
+#                     row['user'] = 1
 
-                    Transaction.objects.create(
-                        user_id=row['user'],
-                        date=row['date'],
-                        transaction_type=row['transaction_type'],
-                        amount=row['amount']
-                    )
+#                     Transaction.objects.create(
+#                         user_id=row['user'],
+#                         date=row['date'],
+#                         transaction_type=row['transaction_type'],
+#                         amount=row['amount']
+#                     )
 
-            self.stdout.write(self.style.SUCCESS('Successfully inserted transactions from a CSV file'))
+#             self.stdout.write(self.style.SUCCESS('Successfully inserted transactions from a CSV file'))
         
-        except FileNotFoundError:
-            self.stderr.write(self.style.ERROR('CSV file not found'))
+#         except FileNotFoundError:
+#             self.stderr.write(self.style.ERROR('CSV file not found'))

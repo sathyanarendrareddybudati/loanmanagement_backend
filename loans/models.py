@@ -75,20 +75,20 @@ class User(AbstractBaseUser):
         "Is the user a member of staff?"
         return self.is_admin
     
-class Transaction(models.Model):
+# class Transaction(models.Model):
 
-    LOAN_TYPES = (
-        ('DEBIT', 'DEBIT'),
-        ('CREDIT', 'CREDIT'),
-    )
+#     LOAN_TYPES = (
+#         ('DEBIT', 'DEBIT'),
+#         ('CREDIT', 'CREDIT'),
+#     )
     
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='transactions')
-    date = models.DateField()
-    transaction_type = models.CharField(max_length=10, choices=LOAN_TYPES)
-    amount = models.DecimalField(max_digits=10, decimal_places=2)
+#     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='transactions')
+#     date = models.DateField()
+#     transaction_type = models.CharField(max_length=10, choices=LOAN_TYPES)
+#     amount = models.DecimalField(max_digits=10, decimal_places=2)
 
-    def __str__(self):
-        return self.amount
+#     def __str__(self):
+#         return self.amount
 
 class Loan(models.Model):
 
