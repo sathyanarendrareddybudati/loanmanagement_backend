@@ -48,6 +48,7 @@ class UserLoginAPI(APIView):
             email=serializer.data.get('email')
             password=serializer.data.get('password')
             user=authenticate(email=email,password=password)
+            print('user',user.id)
  
             annual_income = user.annual_income
 
