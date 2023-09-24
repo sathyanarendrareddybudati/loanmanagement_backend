@@ -1,6 +1,6 @@
 from loans.models import User
 from loans.constants import MIN_CREDIT_SCORE, MAX_CREDIT_SCORE, HIGH_BALANCE, LOW_INCOME, TRANSACTIONS_FILE
-from loans.models import User, Transaction
+from loans.models import User
 from celery import shared_task
 from decimal import Decimal
 import csv
