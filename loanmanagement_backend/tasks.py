@@ -1,5 +1,5 @@
 from loans.models import User
-from loans.constants import MIN_CREDIT_SCORE, MAX_CREDIT_SCORE, HIGH_BALANCE, LOW_INCOME, TRANSACTIONS_FILE
+from loans.constants import MIN_CREDIT_SCORE, MAX_CREDIT_SCORE, HIGH_BALANCE, MIN_BALANCE, TRANSACTIONS_FILE
 from loans.models import User
 from celery import shared_task
 from decimal import Decimal
@@ -11,13 +11,13 @@ def calculate_credit_score(self, annual_income, user_id):
     min_credit_score = MIN_CREDIT_SCORE
     max_credit_score = MAX_CREDIT_SCORE
 
-    low_income = LOW_INCOME
+    min_balance = MIN_BALANCE
     high_balance = HIGH_BALANCE
     total_balance = 0
 
     user = User.objects.get(id=user_id)
 
-    if annual_income >= low_income:
+    if annual_income >= min_balance:
         credit_score = max_credit_score
     else:
         credit_score = min_credit_score
@@ -48,13 +48,13 @@ def calculate_credit_score(self, annual_income, user_id):
 
     if total_balances >= high_balance:
         credit_score = max_credit_score
-    elif total_balances <= low_income:
+    elif total_balances <= min_balance:
         credit_score = min_credit_score
     else:
-        balance_difference = total_balances - low_income
-        credit_score_change = int(balance_difference / Decimal('15000')) * 10
+        balance_difference = total_balances - min_balance
+        credit_scores = int(balance_difference / Decimal('15000')) * 10
 
-        credit_score = max(min_credit_score, min(max_credit_score, max_credit_score - credit_score_change))
+        credit_score = max(min_credit_score, min(max_credit_score, credit_scores))
 
     user.credit_score = credit_score
     user.save()
