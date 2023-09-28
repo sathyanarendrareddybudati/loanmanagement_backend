@@ -5,11 +5,13 @@ WORKDIR /loanmanagement_backend
 COPY ./requirements.txt .
 RUN pip install -r ./requirements.txt
 
-# Copy the entire application code to the image
+# Copy the entire application code to the container
 COPY . .
 
-# Update the CMD instruction to run both Celery and Django
-CMD celery -A loanmanagement_backend worker --loglevel=info & python3 manage.py runserver 0.0.0.0:8000
+# Set the DJANGO_SETTINGS_MODULE environment variable
+ENV DJANGO_SETTINGS_MODULE=loanmanagement_backend.settings
 
-# Expose additional ports if necessary
+CMD celery -A loanmanagement_backend worker --loglevel=info && python manage.py runserver 0.0.0.0:8000
+
+# Expose port 8000 for the Django application (if necessary)
 EXPOSE 8000
